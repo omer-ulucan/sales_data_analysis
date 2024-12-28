@@ -5,12 +5,14 @@ df = pd.read_csv(r"C:\Users\gerha\OneDrive\Desktop\sales_data_analysis\sales_dat
 #df is ready, need encoding because the file raised an error
 
 def clean_data(df):
-    df["ADDRESSLINE2"] = df["ADDRESSLINE2"].fillna("N/A")
     df["STATE"] = df["STATE"].fillna("N/A")
     df["POSTALCODE"] = df["POSTALCODE"].fillna("N/A")
     df["TERRITORY"] = df["TERRITORY"].fillna("N/A")
-    #df['PRICEEACH'].fillna(df['PRICEEACH'].mean(), inplace=True)
-    #df['QUANTITYORDERED'].fillna(0, inplace=True)
+    df['FULL_ADDRESS'] = df['ADDRESSLINE1'].fillna('') + " " + df['ADDRESSLINE2'].fillna('')
+    df['PRICEEACH'].fillna(df['PRICEEACH'].mean(), inplace=True)
+    df['QUANTITYORDERED'].fillna(0, inplace=True)
+    df['SALES'] = pd.to_numeric(df['SALES'], errors='coerce')  # Converts non-numeric to NaN
+
     return df
 
 cleaned_data = clean_data(df)
@@ -59,7 +61,38 @@ def sales_by_country(df, country):
         if country in sales["COUNTRY"].values:
             return sales[sales["COUNTRY"] == country]
         else:
-            raise ValueError(f"COUNTRY '{country}' not found in the dataset.")
+            raise ValueError(f"Country '{country}' not found in the dataset.")
     else:
         raise KeyError("Columns 'COUNTRY' or 'SALES' are missing in the DataFrame.")
+
+def sales_by_customer(df, customer):
+    #ensure that 'CUSTOMERNAME' and 'SALES' columns exist in the DataFrame
+    if "CUSTOMERNAME" in df.columns and 'SALES' in df.columns:
+        #normalize customername column
+        df["CUSTOMERNAME"] = df["CUSTOMERNAME"].str.lower()
+        #group by customername
+        sales = df.groupby("CUSTOMERNAME")["SALES"].sum().reset_index()
+
+        customer = customer.lower()
+        if customer in sales["CUSTOMERNAME"].values:
+            return sales[sales["CUSTOMERNAME"] == customer]
+        else:
+            raise ValueError(f"Customer '{customer}' not found in the dataset.")
+    else:
+        raise KeyError("Columns 'CUSTOMERNAME' or 'SALES' are missing in the DataFrame")
+
+
+def monthly_sales(df):
+    df["ORDERDATE"] = pd.to_datetime(df["ORDERDATE"], errors ="coerce")
+    # Extract Year and Month from the 'ORDERDATE'
+    df['YearMonth'] = df['ORDERDATE'].dt.to_period('M')
+
+    monthly_sales = df.groupby("YearMonth")["SALES"].sum().reset_index()
+    return monthly_sales
+
+def monthly_sales_by_customer(df, customer):
+    customer_sales = monthly_sales(df)
+    customer_sales = customer_sales[customer_sales['CUSTOMERNAME'].str.lower() == customer.lower()]
+    return customer_sales
+
 
