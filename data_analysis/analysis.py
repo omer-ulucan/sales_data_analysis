@@ -95,4 +95,3 @@ def monthly_sales_by_customer(df, customer):
     customer_sales = customer_sales[customer_sales['CUSTOMERNAME'].str.lower() == customer.lower()]
     return customer_sales
 
-
