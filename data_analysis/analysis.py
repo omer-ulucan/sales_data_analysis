@@ -12,13 +12,16 @@ def clean_data(df):
     df['PRICEEACH'].fillna(df['PRICEEACH'].mean(), inplace=True)
     df['QUANTITYORDERED'].fillna(0, inplace=True)
     df['SALES'] = pd.to_numeric(df['SALES'], errors='coerce')  # Converts non-numeric to NaN
-
     return df
 
 cleaned_data = clean_data(df)
 
 def total_sales(df):
-    return df["SALES"].sum() #in dollars
+    total_sales = df["SALES"].sum()
+    return total_sales
+
+def net_sales(df):
+    return total_sales(df) - net_sales(df)
 
 def cancelled_sales_count(df):
     # Check if 'STATUS' column exists
