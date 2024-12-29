@@ -133,11 +133,3 @@ To test the API, use tools like:
 - Integrate a frontend for data visualization.
 - Expand analysis features (e.g., predictive models).
 
-## License
-
-This project is licensed under the MIT License. See `LICENSE` for more details.
-
----
-
-Feel free to customize this README for your specific use case!
-
