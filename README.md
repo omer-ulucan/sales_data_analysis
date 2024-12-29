@@ -25,7 +25,7 @@ This project provides a RESTful API for analyzing sales data from a CSV file usi
 
 ```
 project/
-├── analysis.py              # Data cleaning and analysis functions
+├── data_analysis/analysis.py              # Data cleaning and analysis functions
 ├── database/
 │   ├── database.py          # SQLite connection manager
 │   ├── create_table.py      # Database schema creation
