@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+import pandas as pd
 from database.query_data import insert_analysis_result, get_analysis_results
 from data_analysis.analysis import total_sales, cancelled_sales_count, cancelled_sales_sum
 from database.database import get_connection
